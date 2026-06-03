@@ -1,0 +1,93 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+    - 5173:5173
+    volumes:
+    - ./frontend:/app
+    - /app/node_modules
+
+  node:
+    build: ./backend/node
+    ports:
+    - 3001:3001
+    depends_on:
+    - postgres
+    - mongo
+    - redis
+    - minio
+    volumes:
+    - ./backend/node:/app
+
+  fastapi:
+    build: ./backend/fastAPI
+    ports:
+    - 8000:8000
+    depends_on:
+    - postgres
+    - mongo
+    - redis
+    - minio
+    volumes:
+    - ./backend/fastAPI:/app
+
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: qwert
+      POSTGRES_DB: video_synopsis
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo
+    container_name: mongodb
+    ports:
+    - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: qwert
+    volumes:
+    - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    ports:
+    - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: qwert
+      ME_CONFIG_MONGODB_URL: mongodb://admin:qwert@mongo:27017/
+    volumes:
+    - mongo_data:/data/db
+    depends_on:
+    - mongo  
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+    - 6379:6379
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+    - 9000:9000
+    - 9001:9001
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password123
+    command: server /data --console-address ":9001"
+    volumes:
+    - minio_data:/data
+    
+volumes:
+  postgres_data:
+  mongo_data:
+  minio_data:

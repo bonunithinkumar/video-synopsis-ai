@@ -1,0 +1,21 @@
+@import "./styles/Dashboard.css";
+
+body{
+  background-color: #131316;
+}
+
+/* This styles all inputs with the light placeholder */
+input::placeholder {
+    color: #ffffff;   
+    opacity: 0.25;    
+}
+
+input::-webkit-input-placeholder {
+    color: #ffffff;
+    opacity: 0.25;
+}
+
+input::-moz-placeholder {
+    color: #ffffff;
+    opacity: 0.25;
+}

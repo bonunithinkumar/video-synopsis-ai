@@ -1,0 +1,87 @@
+.sidebar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  height: 100vh;
+  background-color: #0c0c0e !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 24px !important;
+  box-sizing: border-box;
+}
+
+.navbar-icon {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  background: linear-gradient(
+    90deg, 
+    #B1B9FC 0%,    
+    #93C5FD 45%,   
+    #5DD5FA 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sidebar hr {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  opacity: 1 !important;
+  margin: 20px 0 !important;
+}
+
+.sidebar .nav-pills .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #94a3b8 !important;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-pills li .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #ffffff !important;
+}
+
+.sidebar .dropdown > a {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  background-color: #161619 !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.sidebar .dropdown > a:hover {
+  background-color: #1f1f23 !important;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .dropdown > a::after {
+  display: none !important; /* Hide default dropdown caret */
+}
+
+.sidebar .dropdown > a img {
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  margin-right: 10px !important;
+}
+
+.sidebar .dropdown > a strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e2e8f0;
+}

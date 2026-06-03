@@ -1,0 +1,156 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.even {
+    min-height: 750px;
+    background-color: #0E0E10;
+    padding: 80px 20px;
+    margin-top: 30px;
+    box-sizing: border-box;
+    max-height: 850px;
+}
+
+.title-section1 {
+    text-align: center;
+    color: white;
+    margin-bottom: 170px;
+}
+
+.content-boxes-section1 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.section1-content-boxes {
+    background-color: rgba(40, 40, 44, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    min-height: 190px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    padding: 24px;
+    color: #ffffff;
+    box-sizing: border-box;
+}
+
+.section1-content-boxes-title {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 12px;
+}
+
+.section1-content-boxes-title-icons {
+    font-size: 2rem;
+    margin-bottom: 16px;
+}
+
+.section1-content-boxes-des {
+    color: grey;
+    width: 100%;
+}
+
+.text-color-secondary {
+    color: #C0C1FF;
+}
+
+.text-color-primary {
+    color: #ffffff;
+}
+
+.overall-body {
+    padding-left: 100px;
+}
+
+.section2-subtitle {
+    color: white;
+    margin-top: 35px;
+}
+
+.section2-desc {
+    color: grey;
+    margin-bottom: 35px;
+}
+
+.final-section {
+    min-height: 400px;
+    width: 100%;
+    max-width: 800px;
+    background-color: #1A1A1E;
+    border-radius: 100px;
+    margin: 50px auto;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+}
+
+.price-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.price-box {
+    display: flex;
+    flex-direction: column;
+    width: 260px;
+    height: 420px;
+    background-color: #1A1A1E;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 50px 30px;
+    margin-left: 3%;
+    color: white;
+}
+
+.checkmark{
+    color: cyan;
+    margin-right: 4px;
+    font-size: 1.3rem;
+    padding-bottom: 3px;
+}
+
+.price-desc{
+    color: grey;
+}
+
+.pruchase{
+    border: 2px solid grey;
+    padding: 10px 45px;
+    border-radius: 15px;
+}
+.pruchase:hover{
+    background-color: #9fa2ff;
+    transition: background-color 0.3s ease;
+    color: #0E0E10;
+    border: none;
+}
+
+@media (max-width: 768px) {
+    .even {
+        padding: 40px 15px;
+    }
+
+    .section1-content-boxes {
+        max-width: 100%;
+    }
+}

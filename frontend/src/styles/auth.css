@@ -1,0 +1,69 @@
+.auth-card {
+    /* 1. Position it relative to the screen */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    
+    /* 2. Shift it back by half its own width and height */
+    transform: translate(-50%, -50%);
+
+    /* Your existing internal layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Give it a size so you can see it */
+    background-color: rgba(69, 69, 84, 0.3);
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+}
+body{
+    background-color: #131315;
+}
+
+.btn-submit{
+    margin-top: 20px;
+    margin-left:35% ;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #a78bfa, #22d3ee);
+}
+
+.form-select{
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+/* Styling your icon container */
+.form-icon {
+    font-size: 1.5rem;     
+   margin-right: 5px;
+}
+
+
+.auth-from input,
+.auth-from select {
+    width: 300px;
+    font-size: 0.8rem; 
+
+    padding: 14px 16px 14px 46px; 
+    
+    border-radius: 12px; 
+    outline: none;
+    box-sizing: border-box;
+}
+
+.Home-href{
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    transition: transform 0.5s ease-out;
+}
+.Home-href-icon{
+    font-size: 1.2rem;
+    margin-bottom: 7px;
+    transition: transform 0.5s ease-out;
+}
+
+.Home-href:hover, .Home-href-icon:hover {
+    color: rgb(98, 98, 186);
+}
