@@ -133,19 +133,24 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 This starts PostgreSQL, MongoDB, Redis, and MinIO in the background using Docker. You only need this one command — Docker does the rest silently.
 
 ```bash
-docker-compose up -d
+docker compose up -d
+```
+
+Verify all images are present:
+```bash
+docker images
 ```
 
 Verify all 5 containers are green in Docker Desktop, or run:
 ```bash
-docker-compose ps
+docker ps
 ```
 
 You should see: `postgres`, `mongodb`, `redis`, `minio`, `mongo-express` — all with status `Up`.
 
 To stop them at end of day:
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ---
