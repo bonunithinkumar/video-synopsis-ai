@@ -201,7 +201,11 @@ This is already in `.env.example` — just make sure your `fetch` calls use `imp
 
 # PART 2: For M4 — AI / Transcription (Whisper + MongoDB)
 
+> [!IMPORTANT]
+> **INTEGRATION UPDATE (M4 Work):** M4 has been integrated directly into M3's Celery task flow within this backend. Whisper transcription is now executed inline as part of the ingestion task, MongoDB storage has been removed, and transcribed text is uploaded directly to MinIO while raw audio is deleted. Please refer to [M4CONNECTIVITY.md](file:///C:/Users/VIGNAN/video_synopsis/video-synopsis-ai/M4CONNECTIVITY.md) for the current active configuration.
+
 ## Overview
+
 
 M4's job is to **convert audio to text** using Whisper. Module 1 has already done the hard work of:
 - Deciding whether audio or text is needed

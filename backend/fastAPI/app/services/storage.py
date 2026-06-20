@@ -50,3 +50,12 @@ def upload_transcript(text: str, video_id: str) -> str:
             os.remove(tmp_path)
 
     return f"s3://{bucket_name}/{object_name}"
+
+def delete_object(bucket_name: str, object_key: str) -> None:
+    """
+    Deletes an object from S3/MinIO.
+    (M4 work — Cleanup: remove audio WAV after transcript is stored)
+    """
+    s3 = get_s3_client()
+    s3.delete_object(Bucket=bucket_name, Key=object_key)
+
