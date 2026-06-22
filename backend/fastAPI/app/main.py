@@ -7,6 +7,9 @@ from app.core.config import settings
 # M-5
 from app.api.synopsis import router as synopsis_router
 
+# M-6
+from app.api.export import router as export_router
+
 app = FastAPI(title="YouTube Ingestion API")
 
 app.add_middleware(
@@ -30,3 +33,6 @@ app.include_router(video_router, prefix="/api/v1/videos", tags=["videos"])
 
 # M-5
 app.include_router(synopsis_router, prefix="/api/v1/synopsis", tags=["Synopsis"])
+
+# M-6
+app.include_router(export_router, prefix="/api/v1/export", tags=["Export"])

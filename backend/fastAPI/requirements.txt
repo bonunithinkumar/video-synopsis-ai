@@ -8,14 +8,16 @@ boto3>=1.28.0
 celery[redis]>=5.3.0
 redis>=5.0.0
 isodate>=0.6.0
-<<<<<<< HEAD
+openai-whisper
 
 # M5 — AI Summarization Engine
 groq>=1.4.0
 tiktoken>=0.13.0
 pymongo>=4.17.0
 python-dotenv>=1.2.2
-=======
-openai-whisper
 
->>>>>>> origin/main
+# M6 — Document Export Engine
+python-docx>=1.1.2
+weasyprint>=69.0
+motor>=3.6.0
+jinja2>=3.1.4

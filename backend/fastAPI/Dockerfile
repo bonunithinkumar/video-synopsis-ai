@@ -2,8 +2,12 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install ffmpeg for audio conversion (used by audio_pipeline.py via subprocess)
-RUN apt-get update && apt-get install -y ffmpeg git && rm -rf /var/lib/apt/lists/*
+# Install ffmpeg for audio conversion and system libs for WeasyPrint PDF rendering
+RUN apt-get update && apt-get install -y \
+    ffmpeg git \
+    libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf-2.0-0 \
+    libffi-dev libcairo2 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 COPY requirements.txt .
