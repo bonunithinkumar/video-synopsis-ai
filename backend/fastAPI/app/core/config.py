@@ -18,4 +18,16 @@ class Settings(BaseSettings):
         extra="ignore"
     )
 
+
+# M-5
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017")
+REDIS_URI = os.environ.get("REDIS_URI", "redis://localhost:6379/0")
+
+
 settings = Settings()

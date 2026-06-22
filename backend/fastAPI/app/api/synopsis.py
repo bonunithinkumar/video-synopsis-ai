@@ -1,13 +1,13 @@
 import json
 from fastapi import APIRouter, HTTPException
 
-from models.transcript import Transcript
-from core.constants import SAFE_LIMIT
-from services.sanitization import sanitize_transcript, extract_json
-from services.chunking import count_tokens
-from services.summarizer import summarize_single, summarize_map_reduce
-from workers.tasks import generate_pdf
-from db.mongo import transcripts_collection
+from app.schemas.transcript import Transcript
+from app.core.constants import SAFE_LIMIT
+from app.services.sanitization import sanitize_transcript, extract_json
+from app.services.chunking import count_tokens
+from app.services.summarizer import summarize_single, summarize_map_reduce
+# from app.workers.tasks import generate_pdf
+from app.db.mongo import transcripts_collection
 
 router = APIRouter()
 
@@ -15,7 +15,7 @@ router = APIRouter()
 def greet():
     return {"status": "ok", "message": "Synopsis AI Engine is running"}
 
-@router.post("/api/v1/summary")
+@router.post("/summary")
 def summarize(transcript: Transcript):
     cleaned_text = sanitize_transcript(transcript.text)
     token_count = count_tokens(cleaned_text)
@@ -50,10 +50,10 @@ def summarize(transcript: Transcript):
         },
         "summary": summary_json,
     }
-    generate_pdf.delay(response_json)
+    # generate_pdf.delay(response_json)
     return response_json
 
-@router.post("/api/v1/summary/mongo/{video_id}")
+@router.post("/summary/mongo/{video_id}")
 def summarize_from_mongo(video_id: str):
     doc = transcripts_collection.find_one(
         {"video_id": video_id}
