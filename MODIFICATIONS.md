@@ -179,3 +179,87 @@ Retries automatically up to 3 times with a 30-second delay on failure.
 | `backend/fastAPI/app/services/storage.py` | New | S3/MinIO upload service |
 | `backend/fastAPI/app/services/url_validator.py` | New | YouTube URL parsing + validation |
 | `backend/fastAPI/app/tasks/ingestion.py` | New | Async Celery ingestion task |
+
+---
+
+## Module 5 — Files Added (New)
+
+### `backend/fastAPI/app/api/synopsis.py`
+REST API router for M5 exposing two endpoints:
+- `POST /api/v1/synopsis/summary` — For direct payload testing.
+- `POST /api/v1/synopsis/summary/mongo/{video_id}` — To fetch a transcript from MongoDB and summarize it.
+
+---
+
+### `backend/fastAPI/app/schemas/transcript.py`
+Pydantic models defining the request payload shape for direct summary requests. Ensures type safety across the service boundary.
+
+---
+
+### `backend/fastAPI/app/core/constants.py`
+Houses the prompt logic and chunking constraints:
+- `SYNOPSIS_SYSTEM_PROMPT`: The strict prompt enforcing the JSON structure and tone rules.
+- `MAP_PROMPT_TEMPLATE` & `REDUCE_PREAMBLE`: Templates used during chunking.
+- `SAFE_LIMIT`, `CHUNK_SIZE`, `CHUNK_OVERLAP`: Token bounds corresponding to Groq rate limits.
+
+---
+
+### `backend/fastAPI/app/db/mongo.py`
+Simple MongoDB connection client. Exposes `transcripts_collection` for M5 to pull the raw text output from M4.
+
+---
+
+### `backend/fastAPI/app/services/chunking.py`
+Token counting and text chunking logic using `tiktoken`. Ensures long transcripts are broken cleanly so they don't exceed Groq API limits.
+
+---
+
+### `backend/fastAPI/app/services/llm_service.py`
+Centralized integration with the Groq API (`llama-3.3-70b-versatile`). Includes error handling for token truncations (`HTTP 502`).
+
+---
+
+### `backend/fastAPI/app/services/sanitization.py`
+Data cleaning routines:
+- `sanitize_transcript`: Removes zero-width characters, normalizes quotes, and collapses duplicate words.
+- `extract_json`: A robust extractor that strips out markdown fences (```json) returned by the LLM.
+
+---
+
+### `backend/fastAPI/app/services/summarizer.py`
+The orchestration layer. Decides between `summarize_single` (short videos) and `summarize_map_reduce` (long videos) based on token counts.
+
+---
+
+## Module 5 — Files Modified
+
+### `backend/fastAPI/app/main.py`
+**Action:** Included `synopsis_router` in the main FastAPI application tree with prefix `/api/v1/synopsis`.
+
+---
+
+### `backend/fastAPI/app/core/config.py`
+**Action:** Added `python-dotenv` loader to ingest `GROQ_API_KEY`, `MONGO_URI`, and `REDIS_URI` from the environment.
+
+---
+
+### `backend/fastAPI/requirements.txt`
+**Action:** Appended M5 specific dependencies: `groq`, `tiktoken`, `pymongo`, `python-dotenv`, and `openai-whisper`.
+
+---
+
+## Module 5 — Summary Table
+
+| File | Action | Reason |
+|------|--------|--------|
+| `backend/fastAPI/app/api/synopsis.py` | New | REST API endpoints for JSON summarization |
+| `backend/fastAPI/app/schemas/transcript.py` | New | Request schemas for synopsis inputs |
+| `backend/fastAPI/app/core/constants.py` | New | System prompts, token limits, templates |
+| `backend/fastAPI/app/db/mongo.py` | New | MongoDB connection for transcript retrieval |
+| `backend/fastAPI/app/services/chunking.py` | New | Text chunking for Map-Reduce flow |
+| `backend/fastAPI/app/services/llm_service.py` | New | Groq API interaction logic |
+| `backend/fastAPI/app/services/sanitization.py` | New | Input text cleaning & JSON fence stripping |
+| `backend/fastAPI/app/services/summarizer.py` | New | Single-pass and Map-Reduce orchestrator |
+| `backend/fastAPI/app/main.py` | Modified | Registered `/api/v1/synopsis` router |
+| `backend/fastAPI/app/core/config.py` | Modified | Imported Groq and Mongo ENV variables |
+| `backend/fastAPI/requirements.txt` | Modified | Added Groq, Tiktoken, PyMongo dependencies |

@@ -8,6 +8,7 @@ from app.services.audio_pipeline import download_audio, convert_to_wav, cleanup_
 from app.services.storage import upload_audio, upload_transcript, delete_object
 from app.services.whisper_service import transcribe_audio
 from app.core.config import settings
+from app.db.mongo import transcripts_collection  # M5 bridge: write transcript so M5 can query by video_id
 
 
 logger = logging.getLogger(__name__)
@@ -29,12 +30,14 @@ def process_video_ingestion(self, video_url: str, video_id: str):
 
         s3_transcript_uri = None
         s3_audio_uri = None
+        final_transcript_text = ""   # will be set in both paths below
 
         if captions:
             # --- PATH A: Captions found → store transcript text in S3/MinIO ---
             logger.info(f"Captions found for {video_id} ({len(captions)} chars). Uploading transcript to storage.")
             self.update_state(state='UPLOADING_TRANSCRIPT', meta={'progress': 'Uploading transcript to storage'})
             s3_transcript_uri = upload_transcript(captions, video_id)
+            final_transcript_text = captions                          # M5 bridge: capture text
             logger.info(f"Transcript uploaded: {s3_transcript_uri}")
         else:
             # --- PATH B: No captions → download audio and store in S3/MinIO ---
@@ -56,6 +59,7 @@ def process_video_ingestion(self, video_url: str, video_id: str):
             self.update_state(state='TRANSCRIBING_AUDIO', meta={'progress': 'Transcribing audio using Whisper (M4 work)'})
             logger.info(f"[M4 work] Transcribing audio with Whisper for {video_id}")
             transcript_text = transcribe_audio(wav_path)
+            final_transcript_text = transcript_text                   # M5 bridge: capture text
             
             logger.info(f"[M4 work] Uploading Whisper transcript to storage")
             s3_transcript_uri = upload_transcript(transcript_text, video_id)
@@ -65,7 +69,27 @@ def process_video_ingestion(self, video_url: str, video_id: str):
             s3_audio_uri = None # Set to None as it's deleted
 
 
-        # Step 3: Complete
+        # Step 3: Write transcript to MongoDB so M5 can retrieve it by video_id
+        # Both Path A (captions) and Path B (Whisper) converge here.
+        self.update_state(state='SAVING_TO_DB', meta={'progress': 'Saving transcript to MongoDB (M5 bridge)'})
+        try:
+            transcripts_collection.update_one(
+                {"video_id": video_id},
+                {"$set": {
+                    "video_id": video_id,
+                    "transcript_text": final_transcript_text,
+                    "source": "youtube_captions" if captions else "whisper",
+                    "s3_transcript_uri": s3_transcript_uri,
+                    "metadata": metadata,
+                }},
+                upsert=True   # Insert if not present, update if already exists
+            )
+            logger.info(f"[M5 bridge] Transcript saved to MongoDB for video_id: {video_id}")
+        except Exception as db_exc:
+            # Don't fail the whole task if MongoDB write fails — log and continue
+            logger.warning(f"[M5 bridge] MongoDB write failed (non-fatal): {db_exc}")
+
+        # Step 4: Complete
         self.update_state(state='COMPLETED', meta={'progress': 'Processing complete'})
 
         result = {

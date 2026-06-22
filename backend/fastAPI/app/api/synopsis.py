@@ -85,5 +85,19 @@ def summarize_from_mongo(video_id: str):
         )
 
     cleaned_json = extract_json(summary_text)
+    try:
+        summary_json = json.loads(cleaned_json)
+    except json.JSONDecodeError as e:
+        raise HTTPException(
+            status_code=502,
+            detail=f"LLM returned invalid JSON: {e}. Raw snippet: {summary_text[:300]}"
+        )
 
-    return json.loads(cleaned_json)
+    return {
+        "video_metadata": {
+            "title": title,
+            "video_id": video_id,
+            "source": doc.get("source", "unknown"),
+        },
+        "summary": summary_json,
+    }
