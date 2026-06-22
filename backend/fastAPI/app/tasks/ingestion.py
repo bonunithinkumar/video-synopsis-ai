@@ -5,7 +5,10 @@ from celery import shared_task
 from app.services.metadata_fetcher import get_video_metadata
 from app.services.caption_fetcher import fetch_captions
 from app.services.audio_pipeline import download_audio, convert_to_wav, cleanup_temp_files
-from app.services.storage import upload_audio, upload_transcript
+from app.services.storage import upload_audio, upload_transcript, delete_object
+from app.services.whisper_service import transcribe_audio
+from app.core.config import settings
+
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +51,19 @@ def process_video_ingestion(self, video_url: str, video_id: str):
             self.update_state(state='UPLOADING_AUDIO', meta={'progress': 'Uploading audio to storage'})
             s3_audio_uri = upload_audio(wav_path, video_id)
             logger.info(f"Audio uploaded: {s3_audio_uri}")
+
+            # --- M4 work: Run Whisper transcription (small model), upload transcript, clean up audio ---
+            self.update_state(state='TRANSCRIBING_AUDIO', meta={'progress': 'Transcribing audio using Whisper (M4 work)'})
+            logger.info(f"[M4 work] Transcribing audio with Whisper for {video_id}")
+            transcript_text = transcribe_audio(wav_path)
+            
+            logger.info(f"[M4 work] Uploading Whisper transcript to storage")
+            s3_transcript_uri = upload_transcript(transcript_text, video_id)
+            
+            logger.info(f"[M4 work] Cleaning up/deleting audio file from storage")
+            delete_object(settings.MINIO_BUCKET_NAME, f"audio/{video_id}.wav")
+            s3_audio_uri = None # Set to None as it's deleted
+
 
         # Step 3: Complete
         self.update_state(state='COMPLETED', meta={'progress': 'Processing complete'})
