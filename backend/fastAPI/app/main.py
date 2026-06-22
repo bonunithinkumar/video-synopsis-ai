@@ -4,6 +4,9 @@ from app.api.videos import router as video_router
 from app.services.storage import ensure_bucket_exists
 from app.core.config import settings
 
+# M-5
+from app.api.synopsis import router as synopsis_router
+
 app = FastAPI(title="YouTube Ingestion API")
 
 app.add_middleware(
@@ -23,3 +26,7 @@ def health_check():
     return {"status": "ok"}
 
 app.include_router(video_router, prefix="/api/v1/videos", tags=["videos"])
+
+
+# M-5
+app.include_router(synopsis_router, prefix="/api/v1/synopsis", tags=["Synopsis"])
