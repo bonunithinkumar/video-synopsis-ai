@@ -1,10 +1,11 @@
-MODEL = "llama-3.3-70b-versatile"
+import os
+MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 SAFE_LIMIT = 4500      
 CHUNK_SIZE = 4000       
 CHUNK_OVERLAP = 400     
 MAP_OUTPUT_TOKENS = 1000   
-REDUCE_OUTPUT_TOKENS = 6000  
+REDUCE_OUTPUT_TOKENS = 2000  
 
 SYNOPSIS_SYSTEM_PROMPT = """# **Role:**
 You are an expert video content analyst and synopsis writer. You specialize in distilling long-form spoken content into clean, structured documents — without erasing the speaker's personality, tone, or way of explaining things.

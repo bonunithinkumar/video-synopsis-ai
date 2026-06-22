@@ -9,9 +9,14 @@ RUN apt-get update && apt-get install -y \
     libffi-dev libcairo2 \
     && rm -rf /var/lib/apt/lists/*
 
+# Prevent pip installation timeouts in slow network environments
+ENV PIP_DEFAULT_TIMEOUT=1000
+ENV PIP_RETRIES=10
+
 # Install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY app/ ./app/
